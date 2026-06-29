@@ -1,19 +1,433 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Travel Infographics</title>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
-    h1 { color: #333; }
-    a { display: block; margin: 15px 0; font-size: 18px; color: #0066cc; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gower Peninsula Guide</title>
+    
+    <!-- Load Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Setup modules so React and Icons work natively in the browser -->
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@18.2.0",
+          "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+          "lucide-react": "https://esm.sh/lucide-react@0.294.0"
+        }
+      }
+    </script>
+    
+    <!-- Load Babel to translate JSX in real-time -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body>
-  <h1>Travel Infographics</h1>
-  <p>Explore destination guides:</p>
-  <a href="wales/">Wales</a>
-  <a href="portugal/">Portugal</a>
-  <a href="spain/">Spain</a>
+<body class="bg-[#f7fcfb] antialiased">
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+        import React from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { 
+          Map as MapIcon, 
+          Mountain, 
+          Calendar, 
+          ChevronRight, 
+          Info, 
+          Compass,
+          Castle,
+          ExternalLink,
+          Printer,
+          Navigation,
+          CheckCircle2,
+          Waves,
+          Home,
+          Train,
+          Plane,
+          Car,
+          Coffee,
+          Utensils,
+          PhoneCall,
+          Bed
+        } from 'lucide-react';
+
+        const App = () => {
+          const itinerary = [
+            {
+              day: 1,
+              date: "July 9",
+              shortName: "Denver",
+              route: "Departure from Denver",
+              dist: "0 km",
+              gain: "0m",
+              history: "Begin your journey with an overnight flight from Denver to London Heathrow. Get some rest before the Welsh adventure begins.",
+              logistics: "Flight UA262 departing Denver (DEN) at 8:10 PM.",
+              landmark: "Denver International Airport",
+              icon: <Plane className="w-6 h-6" />,
+              mapLink: "https://www.google.com/maps/search/?api=1&query=Denver+International+Airport"
+            },
+            {
+              day: 2,
+              date: "July 10",
+              shortName: "Arrival",
+              route: "Arrival & Abergavenny",
+              dist: "0 km",
+              gain: "0m",
+              history: "Arrive at Heathrow at 12:25 pm. Transfer to the charming Welsh market town of Abergavenny and check in for your pre-tour stay. Known as the 'Gateway to Wales', Abergavenny is famous for its thriving food scene and stunning mountain backdrops.",
+              accommodation: {
+                name: "The Angel Hotel",
+                address: "15 Cross St, Abergavenny NP7 5EN, UK",
+                phone: "+44 1873 857121",
+                url: "https://www.angelabergavenny.com/"
+              },
+              landmark: "The Angel Hotel",
+              icon: <Car className="w-6 h-6" />,
+              mapLink: "https://www.google.com/maps/search/?api=1&query=Angel+Hotel+Abergavenny"
+            },
+            {
+              day: 3,
+              date: "July 11",
+              shortName: "Abergavenny",
+              route: "Abergavenny Leisure",
+              dist: "0 km",
+              gain: "0m",
+              history: "Enjoy a relaxing pre-tour day at the Angel Hotel. Adjust to the timezone and explore! Things to do: Wander the ruins of Abergavenny Castle and its museum, stroll through the Linda Vista Gardens, or browse the bustling indoor market. For the active, a hike up the nearby Sugar Loaf mountain offers spectacular panoramic views.",
+              accommodation: {
+                name: "The Angel Hotel",
+                address: "15 Cross St, Abergavenny NP7 5EN, UK",
+                phone: "+44 1873 857121",
+                url: "https://www.angelabergavenny.com/"
+              },
+              landmark: "Abergavenny Market Town",
+              icon: <Coffee className="w-6 h-6" />,
+              mapLink: "https://www.google.com/maps/search/?api=1&query=Abergavenny+Wales"
+            },
+            {
+              day: 4,
+              date: "July 12",
+              shortName: "Mumbles",
+              route: "Transfer to Mumbles",
+              dist: "0 km",
+              gain: "0m",
+              history: "You’ll be collected by taxi from Swansea Station (Time TBD early afternoon). Check-in to Langland Road B&B between 16:00 and 19:00. Mumbles is a vibrant coastal village. Things to do: Visit the 12th-century Oystermouth Castle, walk the Victorian Mumbles Pier, grab a famous Joe's Ice Cream, or browse the independent boutiques and the Lovespoon Gallery.",
+              logistics: "Pickup from Swansea Station (Time TBD early afternoon): Yellow Cabs (Booking: Dragon, +44 1792 644446).",
+              dining: "Evening: Relax and dine at On the Rocks, a vibrant coastal restaurant.",
+              accommodation: {
+                name: "Langland Road B&B",
+                address: "32 Langland Rd, Mumbles, Swansea SA3 4LU, UK",
+                phone: "+44 1792 361170",
+                url: "https://www.langlandroad.co.uk/"
+              },
+              landmark: "Swansea Bay & Mumbles",
+              icon: <Home className="w-6 h-6" />,
+              mapLink: "https://www.google.com/maps/search/?api=1&query=Mumbles+Swansea"
+            },
+            {
+              day: 5,
+              date: "July 13",
+              shortName: "Three Cliffs",
+              route: "Mumbles to Three Cliffs Bay",
+              dist: "14 km",
+              gain: "250m",
+              history: "09:00 - Set off south along the coastal path, leaving the seaside bustle. Enjoy pretty bays and coves heading toward Pwlldu Head, then head slightly inland to the small hamlet of Southgate.",
+              logistics: "17:00 Pickup from Three Cliffs Coffee Shop, Southgate: Mike's Taxis (Booking: Dragon, +44 7854 374344).",
+              dining: "Lunch: Pack lunch from Mumbles or beach cafes (Langland/Caswell). Dinner: Verdi's Italian restaurant.",
+              accommodation: {
+                name: "Langland Road B&B",
+                address: "32 Langland Rd, Mumbles, Swansea SA3 4LU, UK",
+                phone: "+44 1792 361170",
+                url: "https://www.langlandroad.co.uk/"
+              },
+              landmark: "Pwlldu Head",
+              icon: <Waves className="w-6 h-6" />,
+              mapLink: "https://www.google.com/maps/search/?api=1&query=Southgate+Gower"
+            },
+            {
+              day: 6,
+              date: "July 14",
+              shortName: "Port Eynon",
+              route: "Three Cliffs to Port Eynon",
+              dist: "17 km",
+              gain: "270m",
+              history: "Head out to the high cliffs of Three Cliffs Bay—watch for basking lizards! Take the estuary short cut or pass Norman Pennard Castle ruins. Continue through Oxwich Burrows Nature Reserve and climb into Oxwich Woods before flattening out to Port Eynon.",
+              logistics: "09:00 Taxi back to Three Cliffs. 17:00 Pickup from Captains Table, Port Eynon: Mike's Taxis (+44 7854 374344).",
+              dining: "Lunch: Pack lunch from Mumbles/Three Cliffs shop. Drink: Gower Gin (Port Eynon). Dinner: Gin and tonic family bar.",
+              accommodation: {
+                name: "Langland Road B&B",
+                address: "32 Langland Rd, Mumbles, Swansea SA3 4LU, UK",
+                phone: "+44 1792 361170",
+                url: "https://www.langlandroad.co.uk/"
+              },
+              landmark: "Three Cliffs Bay & Pennard Castle",
+              icon: <Castle className="w-6 h-6" />,
+              mapLink: "https://www.google.com/maps/search/?api=1&query=Port+Eynon+Wales"
+            },
+            {
+              day: 7,
+              date: "July 15",
+              shortName: "Llangennith",
+              route: "Port Eynon to Llangennith",
+              dist: "18 km",
+              gain: "400m",
+              history: "Explore Salt House ruins before heading along the cliff tops. Time the tides to scramble the spectacular Worm’s Head promontory. Continue high above the 3-mile golden sands of Rhossili Beach, turning inland for the final stretch to Llangennith. This village is the surfing capital of Gower; soak up the relaxed, bohemian vibe as you arrive.",
+              logistics: "09:00 Taxi to Port Eynon (Mike's Taxis). IMPORTANT: Bring luggage for transfer to Kings Head Inn, Llangennith.",
+              dining: "Lunch: Rhossili village (The View or The Lookout). Dinner: Pre-book at Kings Head Inn (order packed lunch for tmrw).",
+              accommodation: {
+                name: "Kings Head Inn",
+                address: "Llangennith, Gower, Swansea SA3 1HX, UK",
+                phone: "+44 1792 386212",
+                url: "https://www.kingsheadgower.co.uk/"
+              },
+              landmark: "Worm's Head & Rhossili Beach",
+              icon: <Mountain className="w-6 h-6" />,
+              mapLink: "https://www.google.com/maps/search/?api=1&query=Llangennith+Gower"
+            },
+            {
+              day: 8,
+              date: "July 16",
+              shortName: "Llanrhidian",
+              route: "Llangennith to Llanrhidian",
+              dist: "16 km",
+              gain: "290m",
+              history: "Walk from the door of your inn to the rare flora of Whiteford Burrows Nature Reserve. Pass through Llanrhidian Marsh SSI and visit the 14th Century Weobley Castle. Back in Llangennith, things to do: visit the historic 6th-century St. Cenydd's Church, pop into PJ's Surf Shop (a local institution), or simply enjoy a well-earned pint of local Gower Gold ale at the King's Head.",
+              logistics: "17:00 Pickup from Welcome Country Pub, Llanrhidian: Mike's Taxis (+44 7854 374344) back to Llangennith.",
+              dining: "Lunch: Pre-ordered packed lunch from Kings Head Inn. Dinner: Celebrate at your traditional Welsh inn.",
+              accommodation: {
+                name: "Kings Head Inn",
+                address: "Llangennith, Gower, Swansea SA3 1HX, UK",
+                phone: "+44 1792 386212",
+                url: "https://www.kingsheadgower.co.uk/"
+              },
+              landmark: "Weobley Castle & Salt Marshes",
+              icon: <Castle className="w-6 h-6" />,
+              mapLink: "https://www.google.com/maps/search/?api=1&query=Llanrhidian+Wales"
+            },
+            {
+              day: 9,
+              date: "July 17",
+              shortName: "Departure",
+              route: "Onward to Tunbridge Wells",
+              dist: "0 km",
+              gain: "0m",
+              history: "Private transfer from Kings Head Inn, Llangennith to Swansea. Take the 09:22 Great Western Rail train to London Paddington, and then connections to your final destination: your Royal Tunbridge Wells hotel.",
+              logistics: "09:22 Great Western Rail (Swansea to London Paddington), followed by rail connections to Tunbridge Wells.",
+              accommodation: {
+                name: "Royal Wells Hotel (Coaching Inn Group)",
+                address: "59 Mount Ephraim, Tunbridge Wells TN4 8BE, UK",
+                phone: "+44 1892 511188",
+                url: "https://www.royalwells.co.uk/"
+              },
+              landmark: "Cross-Country Transit",
+              icon: <Train className="w-6 h-6" />,
+              mapLink: "https://www.google.com/maps/search/?api=1&query=Royal+Wells+Hotel+Tunbridge+Wells"
+            }
+          ];
+
+          const totalDist = 65;
+          const fullMapLink = "https://www.google.com/maps/dir/?api=1&origin=Heathrow+Airport&destination=Royal+Wells+Hotel+Tunbridge+Wells&waypoints=Angel+Hotel+Abergavenny%7CLangland+Road+B%26B+Mumbles%7CSouthgate+Gower%7CPort+Eynon+Wales%7CKings+Head+Inn+Llangennith%7CLlanrhidian+Wales%7CSwansea+Railway+Station&travelmode=walking";
+
+          return (
+            <div className="min-h-screen font-sans text-slate-900 p-4 md:p-8">
+              {/* Header section */}
+              <header className="max-w-6xl mx-auto mb-12 text-center relative print:mb-8">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="w-10"></div>
+                  <div className="flex flex-col items-center">
+                     <span className="text-emerald-600 font-bold tracking-[0.2em] text-xs uppercase mb-2">Visit Wales FAM 2026</span>
+                     <h1 className="text-4xl md:text-6xl font-serif font-black text-teal-950 tracking-tight">
+                       Gower Peninsula Walk
+                     </h1>
+                  </div>
+                  <div className="flex gap-3 print:hidden">
+                    <a 
+                      href={fullMapLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-3 bg-white border border-emerald-100 rounded-full shadow-sm hover:shadow-md transition-shadow text-emerald-700 flex items-center justify-center"
+                      title="View Full Route on Google Maps"
+                    >
+                      <MapIcon size={20} />
+                    </a>
+                    <button 
+                      onClick={() => window.print()}
+                      className="p-3 bg-white border border-emerald-100 rounded-full shadow-sm hover:shadow-md transition-shadow text-emerald-700 flex items-center justify-center"
+                      title="Save as PDF"
+                    >
+                      <Printer size={20} />
+                    </button>
+                  </div>
+                </div>
+                
+                <p className="text-xl text-teal-800/80 font-serif italic mb-8">UK's First Area of Outstanding Natural Beauty • July 9 - 17, 2026</p>
+                
+                <div className="flex flex-wrap justify-center gap-4">
+                  <div className="bg-white px-5 py-3 rounded-2xl shadow-sm border border-emerald-100 flex items-center gap-3">
+                    <Calendar className="text-emerald-600" size={20} />
+                    <div className="text-left">
+                      <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest leading-none mb-1">Duration</p>
+                      <p className="font-bold text-slate-700">9 Days</p>
+                    </div>
+                  </div>
+                  <div className="bg-white px-5 py-3 rounded-2xl shadow-sm border border-emerald-100 flex items-center gap-3">
+                    <Compass className="text-emerald-600" size={20} />
+                    <div className="text-left">
+                      <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest leading-none mb-1">Total Distance</p>
+                      <p className="font-bold text-slate-700">{totalDist} km</p>
+                    </div>
+                  </div>
+                  <div className="bg-white px-5 py-3 rounded-2xl shadow-sm border border-emerald-100 flex items-center gap-3">
+                    <Home className="text-emerald-600" size={20} />
+                    <div className="text-left">
+                      <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest leading-none mb-1">Accommodation</p>
+                      <p className="font-bold text-slate-700">4 Locations</p>
+                    </div>
+                  </div>
+                </div>
+              </header>
+
+              <main className="max-w-4xl mx-auto space-y-12 mb-16">
+                {itinerary.map((day) => (
+                  <article key={day.day} className="bg-white rounded-[2rem] p-6 md:p-10 shadow-xl shadow-teal-900/5 border border-emerald-100 relative overflow-hidden print:break-inside-avoid print:shadow-none print:border-slate-300 print:mb-8">
+                    {/* Watermark Icon */}
+                    <div className="absolute -top-10 -right-10 opacity-[0.03] text-teal-900 pointer-events-none transform rotate-12 print:hidden">
+                      {React.cloneElement(day.icon, { size: 300 })}
+                    </div>
+                    
+                    <div className="relative z-10">
+                      {/* Day Header */}
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
+                        <div>
+                          <span className="text-emerald-600 font-black text-sm uppercase tracking-[0.2em] block mb-1">
+                            Day {day.day} • {day.date}
+                          </span>
+                          <h3 className="text-3xl md:text-4xl font-serif font-black text-teal-950">
+                            {day.route}
+                          </h3>
+                        </div>
+                        <a 
+                          href={day.mapLink} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center gap-2 text-xs font-black uppercase tracking-widest text-emerald-700 bg-emerald-50 px-5 py-2.5 rounded-full hover:bg-emerald-100 hover:text-emerald-800 transition-all print:hidden"
+                        >
+                          <Navigation size={14} />
+                          View Map
+                          <ExternalLink size={12} />
+                        </a>
+                      </div>
+
+                      {/* Stats Bar */}
+                      {(day.dist !== "0 km" || day.gain !== "0m") && (
+                        <div className="flex flex-wrap gap-3 mb-8">
+                          {day.gain !== "0m" && (
+                            <div className="bg-emerald-50 text-teal-900 px-4 py-1.5 rounded-full text-xs font-black flex items-center gap-2 border border-emerald-100">
+                              <Mountain size={14} className="text-emerald-600"/> PEAK ELEVATION: {day.gain}
+                            </div>
+                          )}
+                          {day.dist !== "0 km" && (
+                            <div className="bg-slate-50 text-slate-600 px-4 py-1.5 rounded-full text-xs font-black flex items-center gap-2 border border-slate-200">
+                              <ChevronRight size={14} className="text-slate-400"/> DISTANCE: {day.dist}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Overview / History */}
+                      <div className="mb-8">
+                        <div className="flex items-center gap-2 text-emerald-700 font-black uppercase text-[10px] tracking-widest mb-3">
+                          <Compass size={16} /> Overview
+                        </div>
+                        <p className="text-slate-600 leading-relaxed font-serif text-lg italic border-l-4 border-emerald-200 pl-6 py-2">
+                          {day.history}
+                        </p>
+                      </div>
+
+                      {/* Grid for Cards: Logistics, Dining, Accommodation, Landmark */}
+                      <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+                        {day.logistics && (
+                          <div className="p-5 bg-amber-50/70 rounded-2xl border border-amber-100 shadow-sm text-sm flex flex-col justify-center print:bg-white print:border-slate-200">
+                            <div className="flex items-center gap-2 font-black text-amber-900 mb-2 text-[10px] tracking-widest uppercase">
+                              <PhoneCall size={14} /> Transfers & Logistics
+                            </div>
+                            <p className="text-amber-900 font-medium">{day.logistics}</p>
+                          </div>
+                        )}
+                        
+                        {day.dining && (
+                          <div className="p-5 bg-emerald-50/70 rounded-2xl border border-emerald-100 shadow-sm text-sm flex flex-col justify-center print:bg-white print:border-slate-200">
+                            <div className="flex items-center gap-2 font-black text-teal-900 mb-2 text-[10px] tracking-widest uppercase">
+                              <Utensils size={14} /> Food & Dining
+                            </div>
+                            <p className="text-teal-900 font-medium">{day.dining}</p>
+                          </div>
+                        )}
+
+                        {day.accommodation && (
+                          <div className="p-5 bg-blue-50/70 rounded-2xl border border-blue-100 shadow-sm text-sm flex flex-col justify-center print:bg-white print:border-slate-200">
+                            <div className="flex items-center gap-2 font-black text-blue-900 mb-2 text-[10px] tracking-widest uppercase">
+                              <Bed size={14} /> Accommodation
+                            </div>
+                            <p className="text-blue-950 font-black mb-1 text-base">{day.accommodation.name}</p>
+                            <p className="text-blue-800 font-medium mb-3">{day.accommodation.address}</p>
+                            <div className="flex flex-wrap gap-4">
+                              <a href={`tel:${day.accommodation.phone}`} className="inline-flex items-center gap-1.5 text-blue-700 hover:text-blue-900 font-bold transition-colors">
+                                <PhoneCall size={12} /> {day.accommodation.phone}
+                              </a>
+                              {day.accommodation.url !== "#" && (
+                                <a href={day.accommodation.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-blue-700 hover:text-blue-900 font-bold transition-colors print:hidden">
+                                  <ExternalLink size={12} /> Website
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="p-5 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl border border-emerald-100 shadow-inner flex flex-col justify-center print:bg-none print:bg-slate-50 print:border-slate-200">
+                          <div className="flex items-center gap-2 font-black text-teal-900 mb-2 text-[10px] tracking-widest uppercase">
+                            <Info size={14} /> Key Landmark
+                          </div>
+                          <p className="font-black text-teal-950 text-lg mb-2">{day.landmark}</p>
+                          <div className="flex items-center gap-2 text-teal-800/70 text-xs font-bold">
+                            <CheckCircle2 size={14} />
+                            Itinerary Waypoint
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </article>
+                ))}
+              </main>
+
+              <footer className="max-w-4xl mx-auto border-t border-emerald-200 pt-10 pb-16 flex flex-col md:flex-row justify-between items-center text-slate-400 gap-8 print:hidden">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-emerald-50 rounded-2xl">
+                     <MapIcon size={20} className="text-emerald-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-widest text-slate-500">Expedition Route</p>
+                    <p className="text-sm font-serif italic text-slate-400">UK's First Area of Outstanding Natural Beauty</p>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center md:items-end gap-3">
+                  <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-center text-[10px] font-black uppercase tracking-[0.2em] text-teal-700/60">
+                    <span>Coastal Path Verified</span>
+                    <a href="https://adventuretoursuk.com/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 transition-colors flex items-center gap-1">
+                       In partnership with Adventure Tours UK <ExternalLink size={10} />
+                    </a>
+                  </div>
+                  <div className="text-xs text-slate-500 text-center md:text-right">
+                    <span className="font-bold text-slate-600">Contact: </span>Claire Copeman, Founder<br />
+                    <span>D: +44 (0)1824 737027 | M: +44 (0)1824 737024</span>
+                  </div>
+                </div>
+              </footer>
+            </div>
+          );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
