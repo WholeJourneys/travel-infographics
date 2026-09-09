@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field Notes — Walking Guides of Ireland</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#F2EDE0;
+    --ink:#20362C;
+    --ink-soft:#3E5A4C;
+    --gorse:#C7962E;
+    --atlantic:#3C6E8F;
+    --heather:#7C5A78;
+    --rust:#A84A32;
+    --line:#c9bfa6;
+    --card:#FBF8F1;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--parchment);
+    color:var(--ink);
+    font-family:'Space Grotesk', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .sheet{
+    max-width:1220px;
+    margin:0 auto;
+    padding:56px 48px 80px;
+  }
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    display:grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap:40px;
+    align-items:end;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:28px;
+    margin-bottom:6px;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--rust);
+    margin:0 0 14px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-style:normal;
+    font-size:clamp(40px, 5.4vw, 68px);
+    line-height:0.98;
+    margin:0 0 18px;
+    letter-spacing:-0.01em;
+  }
+  h1 em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--ink-soft);
+  }
+  .hero-sub{
+    font-size:16.5px;
+    line-height:1.55;
+    color:var(--ink-soft);
+    max-width:46ch;
+    margin:0;
+  }
+  .hero-meta{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    border-left:2px solid var(--line);
+    padding-left:20px;
+    line-height:1.9;
+  }
+  .hero-meta b{color:var(--ink); font-weight:600;}
+
+  /* ---------- MAP ---------- */
+  .map-section{
+    display:grid;
+    grid-template-columns: 1fr 340px;
+    gap:0;
+    margin:44px 0 56px;
+    border:1.5px solid var(--ink);
+    background:var(--card);
+  }
+  .map-wrap{
+    position:relative;
+    padding:28px;
+    background:
+      radial-gradient(circle at 18% 22%, rgba(60,110,143,0.08), transparent 40%),
+      radial-gradient(circle at 78% 68%, rgba(199,150,46,0.10), transparent 45%);
+    border-right:1.5px solid var(--ink);
+  }
+  .map-wrap svg{width:100%; height:auto; display:block;}
+  .ireland-shape{
+    fill:#E4DBC4;
+    stroke:var(--ink);
+    stroke-width:2.2;
+  }
+  .county-outline{
+    fill:none;
+    stroke:var(--line);
+    stroke-width:1;
+    stroke-dasharray:3 3;
+  }
+  .pin{ cursor:default; }
+  .pin circle.halo{
+    fill:none;
+    opacity:0.35;
+  }
+  .pin circle.dot{ stroke:var(--ink); stroke-width:1.4; }
+  .pin text{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:500;
+    fill:var(--ink);
+  }
+  .pin .label-title{ font-size:11.5px; font-weight:600; }
+  .pin .label-sub{ font-size:8.7px; fill:var(--ink-soft); }
+  .route-line{
+    fill:none;
+    stroke:var(--rust);
+    stroke-width:1.6;
+    stroke-dasharray:1 6;
+    stroke-linecap:round;
+    opacity:0.7;
+  }
+  .compass{ font-family:'JetBrains Mono',monospace; fill:var(--ink-soft); font-size:10px; }
+
+  .legend{
+    padding:28px 26px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+  }
+  .legend h3{
+    font-family:'Fraunces', serif;
+    font-size:15px;
+    font-weight:600;
+    margin:0 0 4px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--line);
+  }
+  .legend-row{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    font-size:12.5px;
+    line-height:1.5;
+  }
+  .legend-dot{
+    width:11px; height:11px; border-radius:50%;
+    margin-top:3px; flex:none;
+    border:1.4px solid var(--ink);
+  }
+  .legend-row b{ display:block; font-size:12.8px; }
+  .legend-note{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    color:var(--ink-soft);
+    line-height:1.6;
+    border-top:1px solid var(--line);
+    padding-top:14px;
+    margin-top:6px;
+  }
+
+  /* ---------- REGION SECTIONS ---------- */
+  .region{
+    margin-bottom:52px;
+  }
+  .region-head{
+    display:grid;
+    grid-template-columns: 44px 1fr auto;
+    align-items:baseline;
+    gap:14px;
+    border-bottom:1.5px solid var(--ink);
+    padding-bottom:10px;
+    margin-bottom:22px;
+  }
+  .region-dot{
+    width:16px; height:16px; border-radius:50%;
+    border:2px solid var(--ink);
+  }
+  .region-head h2{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:26px;
+    margin:0;
+  }
+  .region-head .region-tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+  }
+
+  .cards{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+    gap:16px;
+  }
+  .card{
+    background:var(--card);
+    border:1.3px solid var(--ink);
+    padding:18px 18px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    position:relative;
+  }
+  .card .kind{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--rust);
+  }
+  .card h3{
+    font-family:'Fraunces', serif;
+    font-size:18.5px;
+    font-weight:600;
+    margin:0;
+    line-height:1.15;
+  }
+  .card p.desc{
+    font-size:12.8px;
+    line-height:1.5;
+    color:var(--ink-soft);
+    margin:2px 0 6px;
+    flex-grow:1;
+  }
+  .card .contact{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.3px;
+    line-height:1.75;
+    border-top:1px dashed var(--line);
+    padding-top:9px;
+    margin-top:2px;
+  }
+  .card .contact a{ color:var(--atlantic); text-decoration:none; border-bottom:1px solid rgba(60,110,143,0.35);}
+  .card .contact a:hover{ border-bottom-color:var(--atlantic); }
+  .card .contact .site{ color:var(--ink); font-weight:500; }
+
+  .badge{
+    position:absolute; top:14px; right:14px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:9.5px;
+    padding:3px 7px;
+    border:1px solid var(--ink);
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .badge.known{ background:var(--gorse); color:var(--ink); border-color:var(--ink); }
+  .badge.reg{ background:transparent; color:var(--ink-soft); }
+
+  /* along the way strip */
+  .aroute{
+    margin-top:10px;
+    background:linear-gradient(90deg, rgba(199,150,46,0.10), rgba(199,150,46,0.02));
+    border-left:3px solid var(--gorse);
+    padding:12px 16px;
+    font-size:12.6px;
+    line-height:1.6;
+  }
+  .aroute b{
+    display:block;
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+
+  footer{
+    margin-top:60px;
+    border-top:2px solid var(--ink);
+    padding-top:20px;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.8px;
+    color:var(--ink-soft);
+  }
+
+  @media (max-width: 860px){
+    .sheet{padding:32px 20px 56px;}
+    header.hero{grid-template-columns:1fr; gap:20px;}
+    .hero-meta{border-left:none; border-top:2px solid var(--line); padding-left:0; padding-top:14px;}
+    .map-section{grid-template-columns:1fr;}
+    .map-wrap{border-right:none; border-bottom:1.5px solid var(--ink);}
+    .region-head{grid-template-columns:32px 1fr;}
+    .region-head .region-tag{grid-column:2; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="hero">
+    <div>
+      <p class="eyebrow"><a href="../" style="color:var(--rust);text-decoration:none;border-bottom:1px solid rgba(168,74,50,.4)">Whole Journeys · Field Notes</a> &nbsp;No. 4</p>
+      <h1>Walking guides<br><em>of Ireland,</em> by region</h1>
+      <p class="hero-sub">A working map of small, independent guiding outfits and driver-guides across four counties — sourced from Fáilte Ireland's registered guide network, county tourism contact lists, and known operators. For scouting and first outreach, not a booking sheet.</p>
+    </div>
+    <div class="hero-meta">
+      <div>Regions mapped: <b>4</b></div>
+      <div>Independent guides: <b>4</b></div>
+      <div>Small operators: <b>6</b></div>
+      <div>National registries: <b>2</b></div>
+      <div>All links tested live: <b>✓ Aug 2026</b></div>
+    </div>
+  </header>
+
+  <section class="map-section">
+    <div class="map-wrap">
+      <svg viewBox="0 0 560 620" xmlns="http://www.w3.org/2000/svg">
+        <!-- Simplified illustrative Ireland silhouette -->
+        <path class="ireland-shape" d="
+          M 300 40
+          C 340 42, 360 60, 375 78
+          C 392 70, 415 74, 420 92
+          C 432 88, 448 100, 442 118
+          C 460 124, 466 146, 452 160
+          C 468 172, 462 196, 444 202
+          C 456 222, 442 246, 418 246
+          C 428 266, 410 286, 388 280
+          C 396 304, 372 320, 352 310
+          C 356 336, 330 352, 310 340
+          C 316 366, 288 382, 268 366
+          C 258 392, 226 396, 214 372
+          C 190 384, 162 372, 160 348
+          C 132 350, 112 328, 122 304
+          C 96 296, 90 268, 110 252
+          C 88 240, 90 212, 114 202
+          C 96 184, 106 158, 132 152
+          C 122 130, 140 106, 166 108
+          C 162 84, 186 62, 210 70
+          C 214 48, 244 34, 268 46
+          C 276 30, 294 28, 300 40 Z" />
+
+        <!-- soft county partition guides (illustrative, not exact borders) -->
+        <path class="county-outline" d="M120 200 Q 220 180 300 210" />
+        <path class="county-outline" d="M160 340 Q 260 320 360 300" />
+        <path class="county-outline" d="M260 40 Q 280 200 250 380" />
+
+        <!-- dotted route suggesting Wild Atlantic Way -->
+        <path class="route-line" d="
+          M 118 210
+          C 100 250, 105 300, 130 330
+          C 155 355, 180 370, 215 375
+          C 250 385, 275 360, 300 345
+          C 330 328, 360 305, 385 280
+          C 405 260, 405 235, 400 210" />
+
+        <!-- Pin: Dublin (east) -->
+        <g class="pin" transform="translate(410,150)">
+          <circle class="halo" r="16" fill="#3C6E8F"/>
+          <circle class="dot" r="6.5" fill="#3C6E8F"/>
+          <text class="label-title" x="12" y="-4">Dublin</text>
+          <text class="label-sub" x="12" y="9">registry only</text>
+        </g>
+
+        <!-- Pin: Mayo / Connemara (northwest) -->
+        <g class="pin" transform="translate(128,196)">
+          <circle class="halo" r="16" fill="#7C5A78"/>
+          <circle class="dot" r="6.5" fill="#7C5A78"/>
+          <text class="label-title" x="-92" y="-4">Mayo / Connemara</text>
+          <text class="label-sub" x="-92" y="9">Wilderness Ireland + Ballina walk</text>
+        </g>
+
+        <!-- Pin: Kerry (southwest) -->
+        <g class="pin" transform="translate(178,352)">
+          <circle class="halo" r="16" fill="#C7962E"/>
+          <circle class="dot" r="6.5" fill="#C7962E"/>
+          <text class="label-title" x="-70" y="24">Kerry</text>
+          <text class="label-sub" x="-70" y="37">4 guides / operators</text>
+        </g>
+
+        <!-- Pin: Cork (south) -->
+        <g class="pin" transform="translate(292,360)">
+          <circle class="halo" r="16" fill="#A84A32"/>
+          <circle class="dot" r="6.5" fill="#A84A32"/>
+          <text class="label-title" x="10" y="24">Cork</text>
+          <text class="label-sub" x="10" y="37">5 guides / operators</text>
+        </g>
+
+        <!-- Pin: Vagabond HQ (Dublin, national) -->
+        <g class="pin" transform="translate(400,180)">
+          <circle class="halo" r="12" fill="#20362C"/>
+          <circle class="dot" r="5" fill="#20362C"/>
+          <text class="label-title" x="10" y="-2" font-size="10">Vagabond HQ</text>
+        </g>
+
+        <text class="compass" x="470" y="560">N ↑ · Wild Atlantic Way (illustrative)</text>
+      </svg>
+    </div>
+
+    <div class="legend">
+      <div>
+        <h3>How to read this map</h3>
+        <div class="legend-row">
+          <div class="legend-dot" style="background:#C7962E"></div>
+          <div><b>Kerry</b> — Ring of Kerry, Killarney, Dingle. Named local guides, direct contact.</div>
+        </div>
+        <div class="legend-row">
+          <div class="legend-dot" style="background:#A84A32"></div>
+          <div><b>Cork</b> — Cork City, Kinsale, West Cork. Named local guides, direct contact.</div>
+        </div>
+        <div class="legend-row">
+          <div class="legend-dot" style="background:#7C5A78"></div>
+          <div><b>Mayo / Connemara</b> — Wilderness Ireland (specialist operator) + a live Ballina walking tour on GetYourGuide.</div>
+        </div>
+        <div class="legend-row">
+          <div class="legend-dot" style="background:#3C6E8F"></div>
+          <div><b>Dublin</b> — no named independents surfaced; national registries only.</div>
+        </div>
+        <div class="legend-row">
+          <div class="legend-dot" style="background:#20362C"></div>
+          <div><b>Vagabond</b> — Dublin-based, small-group driver-guided, nationwide routes.</div>
+        </div>
+      </div>
+      <div class="legend-note">
+        Route line traces the general Wild Atlantic Way corridor connecting Mayo → Kerry → West Cork. Illustrative only — not to scale, not for navigation.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CORK ============ -->
+  <section class="region">
+    <div class="region-head">
+      <div class="region-dot" style="background:#A84A32"></div>
+      <h2>Cork</h2>
+      <span class="region-tag">Cork City · Kinsale · West Cork</span>
+    </div>
+    <div class="cards">
+
+      <div class="card">
+        <span class="badge reg">ATGI-listed</span>
+        <span class="kind">Independent guide</span>
+        <h3>Máirín Ahern</h3>
+        <p class="desc">Independent local guide, Cork region. Listed via Approved Tourist Guides of Ireland.</p>
+        <div class="contact">
+          <div>📞 +353 85 110 3544</div>
+          <div>✉️ <a href="mailto:maritur55@gmail.com">maritur55@gmail.com</a></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="badge reg">ATGI-listed</span>
+        <span class="kind">Independent guide</span>
+        <h3>William Aherne <span style="font-weight:400;font-size:14px;color:var(--ink-soft)">(Liam's Ireland)</span></h3>
+        <p class="desc">Independent local guide, Cork region.</p>
+        <div class="contact">
+          <div>📞 +353 87 979 5610</div>
+          <div>✉️ <a href="mailto:liamsireland@gmail.com">liamsireland@gmail.com</a></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="badge reg">ATGI-listed</span>
+        <span class="kind">Independent guide</span>
+        <h3>Celeste Allan</h3>
+        <p class="desc">Independent local guide, Cork region.</p>
+        <div class="contact">
+          <div>📞 +353 85 732 9707</div>
+          <div>✉️ <a href="mailto:celesteallan1@gmail.com">celesteallan1@gmail.com</a></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="badge known">small outfit</span>
+        <span class="kind">Small guide company</span>
+        <h3>Cork Private Tours</h3>
+        <p class="desc">Small private-tour outfit based in Cork city, day tours and custom routes.</p>
+        <div class="contact">
+          <div>📞 +353 85 121 5338</div>
+          <div>✉️ <a href="mailto:info@corkprivatetours.ie">info@corkprivatetours.ie</a></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="badge known">small outfit</span>
+        <span class="kind">Small guide company</span>
+        <h3>Wild Way Tours</h3>
+        <p class="desc">Kinsale-based, small chauffeur-guide outfit; luxury vehicles, flexible bespoke itineraries across West Cork &amp; Wild Atlantic Way.</p>
+        <div class="contact">
+          <div>📞 +353 86 823 3918</div>
+          <div>✉️ <a href="mailto:wildwaytours@gmail.com">wildwaytours@gmail.com</a></div>
+          <div class="site">🌐 <a href="https://www.wildwaytours.com" target="_blank">wildwaytours.com</a></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="aroute">
+      <b>Along the way — Cork</b>
+      <a href="https://www.corkcity.ie/en/english-market/" target="_blank">English Market</a>, Cork City — 230+ years, organic &amp; small-scale producers ·
+      <a href="https://www.jamesonwhiskey.com/en/visit-our-distilleries/midleton-distillery-cork/" target="_blank">Jameson Midleton Distillery Experience</a> ·
+      <a href="https://www.ballymaloe.ie/" target="_blank">Ballymaloe House</a>, Shanagarry — 300-acre organic farm, farm-to-fork dining &amp; cookery school ·
+      <a href="https://www.fishyfishy.ie/" target="_blank">Fishy Fishy</a>, Kinsale — harbour-caught seafood restaurant.
+    </div>
+  </section>
+
+  <!-- ============ KERRY ============ -->
+  <section class="region">
+    <div class="region-head">
+      <div class="region-dot" style="background:#C7962E"></div>
+      <h2>Kerry</h2>
+      <span class="region-tag">Killarney · Ring of Kerry · Dingle</span>
+    </div>
+    <div class="cards">
+
+      <div class="card">
+        <span class="badge known">small outfit</span>
+        <span class="kind">Small guide company</span>
+        <h3>Kerry Tour Guides <span style="font-weight:400;font-size:14px;color:var(--ink-soft)">— Anne-Marie Cleary</span></h3>
+        <p class="desc">Small, named-guide outfit built around Anne-Marie Cleary; private and small-group touring across Kerry.</p>
+        <div class="contact">
+          <div>📞 +353 86 240 0484</div>
+          <div>✉️ <a href="mailto:info@kerrytourguides.com">info@kerrytourguides.com</a></div>
+          <div class="site">🌐 <a href="https://www.kerrytourguides.com" target="_blank">kerrytourguides.com</a></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="badge known">small outfit</span>
+        <span class="kind">Small guide company</span>
+        <h3>Kerry Experience Tours</h3>
+        <p class="desc">Killarney-based group and private guide outfit.</p>
+        <div class="contact">
+          <div>📞 +353 64 667 1551</div>
+          <div>✉️ <a href="mailto:info@kerryexperiencetours.ie">info@kerryexperiencetours.ie</a></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="badge known">small outfit</span>
+        <span class="kind">Small guide company</span>
+        <h3>Wild Kerry Day Tours</h3>
+        <p class="desc">Killarney day-tour outfit (O'Connor Autotours), Ring of Kerry &amp; Skellig Ring routes.</p>
+        <div class="contact">
+          <div>📞 +353 64 663 1052</div>
+          <div>✉️ <a href="mailto:info@oconnorautotours.ie">info@oconnorautotours.ie</a></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="badge reg">ATGI-listed</span>
+        <span class="kind">Independent guide</span>
+        <h3>Pat Donovan <span style="font-weight:400;font-size:14px;color:var(--ink-soft)">— Ring of Kerry Sightseeing</span></h3>
+        <p class="desc">Independent driver-guide based in Killarney, Ring of Kerry sightseeing routes.</p>
+        <div class="contact">
+          <div>✉️ <a href="mailto:drivingirelandsafely@gmail.com">drivingirelandsafely@gmail.com</a></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="aroute">
+      <b>Along the way — Kerry</b>
+      <a href="https://www.nationalparks.ie/killarney/" target="_blank">Killarney National Park</a> — walking, cycling &amp; Ross Castle, Ireland's first national park ·
+      <a href="https://skelligsix18distillery.ie/" target="_blank">Skellig Six18 Distillery</a>, Cahersiveen — gin &amp; whiskey on the Ring of Kerry, local botanicals ·
+      <a href="https://no35kenmare.com/about-us/local-producers/" target="_blank">No.35, Kenmare</a> — Michelin-listed, sources organic salads/herbs from Whitethorn Farm &amp; sheep's-milk cheese from Velvet Cloud.
+    </div>
+  </section>
+
+  <!-- ============ MAYO / CONNEMARA ============ -->
+  <section class="region">
+    <div class="region-head">
+      <div class="region-dot" style="background:#7C5A78"></div>
+      <h2>Mayo &amp; Connemara</h2>
+      <span class="region-tag">Wild Atlantic Way, north</span>
+    </div>
+    <div class="cards">
+
+      <div class="card">
+        <span class="badge known">specialist</span>
+        <span class="kind">Adventure &amp; hiking specialist</span>
+        <h3>Wilderness Ireland</h3>
+        <p class="desc">Galway-based adventure operator running walking, hiking and multi-day trips through Connemara and into Mayo — the closest match to your Whole Journeys hiking niche. Already emailing your inbox as an active vendor relationship.</p>
+        <div class="contact">
+          <div>📞 +353 91 457 898</div>
+          <div>✉️ <a href="mailto:info@wildernessireland.com">info@wildernessireland.com</a></div>
+          <div class="site">🌐 <a href="https://www.wildernessireland.com" target="_blank">wildernessireland.com</a></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="badge known">bookable · GetYourGuide</span>
+        <span class="kind">Local walking tour</span>
+        <h3>Ballina: Immersive Walk <span style="font-weight:400;font-size:14px;color:var(--ink-soft)">through People, Places &amp; Stories</span></h3>
+        <p class="desc">1.5-hour storytelling walk through Ballina led by a local guide — history, poetry and legend from the Jackie Clarke Collection through the riverside town. Live listing, verified reviews, private option available.</p>
+        <div class="contact">
+          <div class="site">🌐 <a href="https://www.getyourguide.com/ballina-ireland-l152427/ballina-immersive-walk-through-people-places-stories-t1180939/" target="_blank">getyourguide.com → Ballina walk</a></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="aroute">
+      <b>Along the way — Mayo / Connemara</b>
+      <a href="https://clareislandwhiskey.ie/" target="_blank">Clare Island Whiskey</a> — heritage tour &amp; Grace O'Malley history, guided by island founder Carl O'Grady ·
+      <a href="https://www.glasrai.ie/" target="_blank">Glasraí Organic Farm</a>, Hollymount — organic veg farm supplying Westport &amp; Castlebar markets ·
+      Louisburgh / Roonagh pier ferry crossing.
+    </div>
+  </section>
+
+  <!-- ============ DUBLIN ============ -->
+  <section class="region">
+    <div class="region-head">
+      <div class="region-dot" style="background:#3C6E8F"></div>
+      <h2>Dublin</h2>
+      <span class="region-tag">City &amp; day-trip radius</span>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <span class="kind">Registry — searchable by county</span>
+        <h3>Dublin — search ATGI / ITGA directly</h3>
+        <p class="desc">No individually named independent surfaced for Dublin in this pass despite it being Ireland's busiest tourist county — a genuine gap. Both national registries below let you filter by city; worth a direct search by name before booking.</p>
+        <div class="contact">
+          <div class="site">🌐 <a href="https://www.tourguides.ie" target="_blank">tourguides.ie</a> (ATGI)</div>
+          <div class="site">🌐 <a href="https://www.tourguide.ie" target="_blank">tourguide.ie</a> (ITGA)</div>
+        </div>
+      </div>
+    </div>
+    <div class="aroute">
+      <b>Along the way — Dublin</b>
+      <a href="https://www.tcd.ie/visitors/book-of-kells/" target="_blank">Book of Kells &amp; Trinity Old Library</a> ·
+      <a href="https://www.guinness-storehouse.com/" target="_blank">Guinness Storehouse</a> ·
+      <a href="https://thefumbally.ie/" target="_blank">The Fumbally</a>, Dublin 8 — organic, locally-sourced café built around small Irish growers (McNally's Family Farm, Shackleton Farm).
+    </div>
+  </section>
+
+  <!-- ============ NATIONAL ============ -->
+  <section class="region">
+    <div class="region-head">
+      <div class="region-dot" style="background:#20362C"></div>
+      <h2>National</h2>
+      <span class="region-tag">Multi-region &amp; registries</span>
+    </div>
+    <div class="cards">
+
+      <div class="card">
+        <span class="badge known">known contact</span>
+        <span class="kind">Small-group tour operator</span>
+        <h3>Vagabond Tours of Ireland</h3>
+        <p class="desc">Dublin-based, family-run since 2002 by Rob &amp; Amy Rankin. Award-winning small-group (max 14) driver-guided tours, Wild Atlantic Way &amp; nationwide, active hiking/biking/kayaking itineraries. Ireland's first B Corp travel company. You know the owners directly.</p>
+        <div class="contact">
+          <div class="site">🌐 <a href="https://www.vagabondtoursofireland.com" target="_blank">vagabondtoursofireland.com</a></div>
+          <div>Contact via Rob &amp; Amy Rankin (direct relationship)</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="kind">Registry — searchable by county</span>
+        <h3>ATGI <span style="font-weight:400;font-size:14px;color:var(--ink-soft)">— Approved Tourist Guides of Ireland</span></h3>
+        <p class="desc">The Fáilte Ireland–accredited professional guide association. Best route to find named, badge-certified individuals in Mayo and Dublin specifically.</p>
+        <div class="contact">
+          <div>✉️ <a href="mailto:admin@tourguides.ie">admin@tourguides.ie</a></div>
+          <div class="site">🌐 <a href="https://www.tourguides.ie" target="_blank">tourguides.ie</a></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="kind">Registry — searchable by county</span>
+        <h3>ITGA <span style="font-weight:400;font-size:14px;color:var(--ink-soft)">— Independent Tour Guides Assoc.</span></h3>
+        <p class="desc">Secondary national registry of independent guides, searchable by region.</p>
+        <div class="contact">
+          <div>✉️ <a href="mailto:independenttourguidesassoc@gmail.com">independenttourguidesassoc@gmail.com</a></div>
+          <div class="site">🌐 <a href="https://www.tourguide.ie" target="_blank">tourguide.ie</a></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <div>Compiled from Fáilte Ireland county contact lists, ATGI/ITGA registries &amp; operator sites · Aug 2026</div>
+    <div>Whole Journeys · wholejourneys.com</div>
+  </footer>
+
+</div>
+</body>
+</html>
