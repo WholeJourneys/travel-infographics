@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Slovenia Itinerary V3</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout: guest-facing. Plan options first, one large map, then one section per base with walks from the door, walks with a transfer, and hotel choices. */
+:root {
+  --bg: #f3f5f2; --surface: #ffffff; --fg: #1c2a27; --muted: #566761; --line: #d5ddd8;
+  --soca: #0e7c6b; --soca-soft: #dcefe9; --rock: #8a5a3c; --rock-soft: #f1e4d9;
+  --land: #e9efe6; --other: #dfe3dc; --water: #bcdbe6; --river: #3b86a8; --peak: #5d6a66;
+  --warn: #8a5300; --warn-soft: #f8ecd4;
+  --font-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121a18; --surface: #1a2522; --fg: #e4ece8; --muted: #9bb0a9; --line: #2f403b;
+    --soca: #4fc4ad; --soca-soft: #1d3a34; --rock: #d39a76; --rock-soft: #3a2b20;
+    --land: #1d2a26; --other: #26332f; --water: #1f3a46; --river: #6bb5d6; --peak: #a7b8b2;
+    --warn: #f0b95a; --warn-soft: #3a2f17; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121a18; --surface: #1a2522; --fg: #e4ece8; --muted: #9bb0a9; --line: #2f403b;
+  --soca: #4fc4ad; --soca-soft: #1d3a34; --rock: #d39a76; --rock-soft: #3a2b20;
+  --land: #1d2a26; --other: #26332f; --water: #1f3a46; --river: #6bb5d6; --peak: #a7b8b2;
+  --warn: #f0b95a; --warn-soft: #3a2f17; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 17px; line-height: 1.55;
+  padding-block: 28px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 28px; }
+h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.1rem, 5.4vw, 3.3rem); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 1.6rem; font-weight: 700; }
+h3 { font-size: 1.25rem; font-weight: 700; }
+h4 { font-size: 1.05rem; font-weight: 500; }
+p { margin: 0 0 10px; }
+.eyebrow { font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; color: var(--soca); margin-bottom: 8px; }
+.lede { max-width: 68ch; color: var(--muted); font-size: 1.1rem; margin-top: 14px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-top: 20px; }
+.fact { border-left: 3px solid var(--soca); padding: 2px 0 2px 12px; }
+.fact b { display: block; font-family: var(--font-display); font-size: 1.05rem; }
+.fact span { color: var(--muted); font-size: 0.95rem; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 22px; min-width: 0; }
+.plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+.plan { border-top: 4px solid var(--soca); }
+.plan.b { border-top-color: var(--rock); }
+.plan .kicker { color: var(--muted); margin: 6px 0 12px; }
+.nights { list-style: none; padding: 0; margin: 0 0 14px; display: grid; gap: 0; }
+.nights li { display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); align-items: baseline; }
+.nights li:first-child { border-top: 0; }
+.nights .n { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; color: var(--soca); line-height: 1; }
+.plan.b .nights .n { color: var(--rock); }
+.nights .n small { font-size: 0.8rem; font-weight: 500; color: var(--muted); font-family: var(--font-body); margin-left: 3px; }
+.nights .w b { font-weight: 600; }
+.nights .w span { display: block; color: var(--muted); font-size: 0.93rem; }
+.fit { background: var(--soca-soft); border-radius: 6px; padding: 10px 12px; font-size: 0.95rem; }
+.plan.b .fit { background: var(--rock-soft); }
+.note { background: var(--warn-soft); color: var(--warn); border-radius: 6px; padding: 10px 12px; font-size: 0.95rem; }
+.mapcard svg { width: 100%; height: auto; display: block; border-radius: 6px; }
+.toggles { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.toggles button { min-height: 44px; padding: 0 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); font: 600 0.92rem var(--font-body); cursor: pointer; }
+.toggles button[aria-pressed="true"] { border-color: var(--soca); background: var(--soca-soft); color: var(--soca); }
+.toggles button.b[aria-pressed="true"] { border-color: var(--rock); background: var(--rock-soft); color: var(--rock); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 0.9rem; color: var(--muted); margin-top: 6px; }
+.mapcard .legend svg { width: 16px; height: 16px; min-width: 0; flex: none; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.mapscroll { overflow-x: auto; }
+.mapscroll svg { min-width: 560px; }
+.land { fill: var(--land); } .other { fill: var(--other); stroke: var(--line); stroke-width: 1; }
+.lake { fill: var(--water); } .river { fill: none; stroke: var(--river); stroke-width: 2; stroke-linecap: round; }
+.rA { fill: none; stroke: var(--soca); stroke-width: 3.5; stroke-linejoin: round; stroke-linecap: round; }
+.rB { fill: none; stroke: var(--rock); stroke-width: 3; stroke-dasharray: 9 7; stroke-linejoin: round; stroke-linecap: round; }
+.base { fill: var(--surface); stroke: var(--fg); stroke-width: 3; }
+.peakm { fill: var(--peak); } .passm { fill: var(--surface); stroke: var(--rock); stroke-width: 2.5; }
+.startm { fill: none; stroke: var(--soca); stroke-width: 2.5; }
+.lbl { font: 600 14px var(--font-body); fill: var(--fg); }
+.lbl.s { font: 400 12.5px var(--font-body); fill: var(--muted); }
+.lbl.t { font: 500 11.5px var(--font-body); fill: var(--muted); font-style: italic; }
+.sw { display: inline-block; width: 16px; height: 16px; }
+.base-sec { display: grid; gap: 16px; }
+.bhead { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; justify-content: space-between; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.badge { background: var(--soca-soft); color: var(--soca); border-radius: 999px; padding: 3px 11px; font-size: 0.88rem; font-weight: 600; }
+.badge.b { background: var(--rock-soft); color: var(--rock); }
+.badge.off { background: var(--line); color: var(--muted); }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+.col h4 { margin-bottom: 4px; }
+.col .sub { color: var(--muted); font-size: 0.93rem; margin-bottom: 10px; }
+.flow { background: var(--soca-soft); border-radius: 6px; padding: 12px 14px; display: grid; gap: 6px; }
+.flow b { font-family: var(--font-display); font-weight: 500; }
+.flow p { margin: 0; font-size: 0.96rem; }
+.flow .lab { font-weight: 600; color: var(--soca); }
+.flow .lab.b { color: var(--rock); }
+.day { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 4px 18px; padding: 18px 0; border-top: 1px solid var(--line); }
+.day:first-child { border-top: 0; }
+.day .dt { font-family: var(--font-display); font-weight: 700; line-height: 1.1; color: var(--soca); }
+.day .dt small { display: block; font-family: var(--font-body); font-weight: 600; font-size: 0.82rem; color: var(--muted); margin-top: 4px; }
+.day h3 { font-size: 1.15rem; margin-bottom: 4px; }
+.day .sleep { color: var(--muted); font-size: 0.93rem; margin-bottom: 8px; }
+.day .meta { display: grid; gap: 3px; margin-top: 8px; font-size: 0.95rem; }
+.day .meta span b { font-weight: 600; }
+.opt { border-left: 3px solid var(--soca); padding: 4px 0 4px 12px; margin-top: 12px; }
+.opt.b { border-left-color: var(--rock); }
+.opt h4 { margin-bottom: 4px; }
+@media (max-width: 560px) { .day { grid-template-columns: minmax(0, 1fr); } }
+.walk { border-top: 1px solid var(--line); padding: 12px 0; }
+.walk:first-of-type { border-top: 0; padding-top: 2px; }
+.walk h5 { font: 600 1.02rem var(--font-body); margin: 0 0 4px; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
+.tag { font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; border-radius: 4px; padding: 2px 7px; }
+.tag.guide { background: var(--soca); color: var(--surface); }
+.tag.self { background: var(--line); color: var(--fg); }
+.tag.either { background: var(--warn-soft); color: var(--warn); }
+.walk p { font-size: 0.97rem; margin: 0 0 4px; }
+.walk .stats { color: var(--muted); font-size: 0.93rem; }
+.walk .stats b { color: var(--fg); font-weight: 600; }
+.hotel { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px 16px; padding: 14px 0; border-top: 1px solid var(--line); }
+.hotel:first-of-type { border-top: 0; }
+.hotel .name { font-weight: 600; min-width: 0; flex: 1 1 280px; }
+.hotel .name small { display: block; font-weight: 400; color: var(--muted); font-size: 0.92rem; }
+.links { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 16px; border: 1px solid var(--soca); color: var(--soca); background: transparent; border-radius: 6px; text-decoration: none; font: 600 0.95rem var(--font-body); }
+.btn:hover { background: var(--soca-soft); }
+.btn.is-disabled { border-style: dashed; color: var(--muted); border-color: var(--line); }
+.btn.is-disabled:hover { background: transparent; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--rock); outline-offset: 2px; }
+a { color: var(--soca); }
+.moves { display: grid; gap: 0; }
+.mv { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 14px; padding: 12px 0; border-top: 1px solid var(--line); }
+.mv:first-child { border-top: 0; }
+.mv b { font-family: var(--font-display); color: var(--soca); }
+.mv.b b { color: var(--rock); }
+.decide { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; }
+.src { font-size: 0.9rem; color: var(--muted); }
+.contact { display: grid; gap: 2px; }
+@media (max-width: 480px) { .mv { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+
+/* PDF and print: always light, full width, no cut-off blocks, no interactive controls */
+@page { size: Letter; margin: 14mm 12mm; }
+@media print {
+  :root:root:root { color-scheme: light;
+    --bg: #ffffff; --surface: #ffffff; --fg: #1c2a27; --muted: #566761; --line: #d5ddd8;
+    --soca: #0e7c6b; --soca-soft: #dcefe9; --rock: #8a5a3c; --rock-soft: #f1e4d9;
+    --land: #e9efe6; --other: #dfe3dc; --water: #bcdbe6; --river: #3b86a8; --peak: #5d6a66;
+    --warn: #8a5300; --warn-soft: #f8ecd4; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { background: #fff !important; }
+  body { font-size: 12.5pt; line-height: 1.45; padding: 0 !important; }
+  .wrap { max-width: none; gap: 16px; }
+  .card { padding: 14px; box-shadow: none; }
+  .toggles, .legend-note, button { display: none !important; }
+  h1, h2, h3, h4 { break-after: avoid; page-break-after: avoid; }
+  header, footer, .day, .opt, .plan, .fact, .hotel, .mapcard, .mapcard svg, .walk, li { break-inside: avoid; page-break-inside: avoid; }
+  .mapcard svg { max-height: 220mm; width: 100%; height: auto; }
+  a { color: inherit; text-decoration: underline; }
+  .wrap, .card, .day, .plans { min-width: 0; }
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Whole Journeys · Partially guided walking</div>
+  <h1>Slovenia: Julian Alps and Soča Valley</h1>
+  <p class="lede">Eleven nights in four comfortable bases, with optional extra nights, June 16 to 27, 2027: Ljubljana, Lake Bohinj, Kranjska Gora and Bovec. Each base has a day of walking from the door or a short transfer, with guided days for the bigger mountains, and a free day in Bovec. Where a day has two options, you choose. Everything here is a suggestion, and the hiking and driving times are approximate until the hotels and routes are confirmed.</p>
+  <div class="facts">
+    <div class="fact"><b>Four bases, three hotel changes</b><span>Private transfers carry you and your luggage between them.</span></div>
+    <div class="fact"><b>Guided and independent</b><span>Our local guide leads the Vršič, Soča and Drežnica days; others are self-guided with clear route notes.</span></div>
+    <div class="fact"><b>Paced for you</b><span>Walks run from 1 to 4 hours, with one longer option on June 20 and a free day on June 24. Most can be shortened or extended on the day, working with your guide.</span></div>
+  </div>
+</header>
+
+<section aria-labelledby="plans">
+  <h2 id="plans" style="margin-bottom:14px">The four bases</h2>
+  <div class="plans">
+    <article class="card plan a" style="grid-column: 1 / -1">
+      <ul class="nights">
+        <li><span class="n">2<small>nights</small></span><span class="w"><b>Ljubljana, June 16 to 18</b><span>Arrive, old town, castle, market and an optional history tour.</span></span></li>
+        <li><span class="n">3<small>nights</small></span><span class="w"><b>Lake Bohinj, June 18 to 21</b><span>Stop at Lake Bled on the way. Mostnica Gorge, then Vogel or the Seven Lakes.</span></span></li>
+        <li><span class="n">2<small>nights</small></span><span class="w"><b>Kranjska Gora, June 21 to 23</b><span>Lake Jasna and Zelenci, then a guided Slemenova Špica day.</span></span></li>
+        <li><span class="n">4<small>nights</small></span><span class="w"><b>Bovec, June 23 to 27</b><span>Soča gorges, a free day, Kozjak and Drežnica, then Kolovrat or the Tolmin Gorges.</span></span></li>
+      </ul>
+      <p class="fit"><b>11 nights.</b> Extra nights for more relaxation are optional; see below.</p>
+    </article>
+  </div>
+</section>
+
+<section class="card" aria-labelledby="days-h">
+  <h2 id="days-h" style="margin-bottom:6px">Day by day</h2>
+  <p style="color:var(--muted)">Hiking durations and driving times are approximate. Most walks can be shortened or extended on the day, working with your guide. Where a day offers a choice, both options are shown.</p>
+  <div id="days"></div>
+</section>
+
+<section class="card" aria-labelledby="x-h">
+  <h2 id="x-h" style="margin-bottom:6px">Optional extra nights for more relaxation</h2>
+  <p style="color:var(--muted)">Each extra night adds a day with no schedule. Choose any, or none. The dates shift by one day for each night you add.</p>
+  <div id="extras"></div>
+</section>
+
+<section class="card mapcard" aria-labelledby="maph">
+  <h2 id="maph">Where everything is</h2>
+  <p style="color:var(--muted);margin-top:6px">Bases, the route between them, day trips from Bovec, mountain passes, peaks and walk starts. Schematic, not to scale.</p>
+  <div class="toggles">
+    <button type="button" id="t-a" aria-pressed="true">Main route</button>
+    <button type="button" class="b" id="t-b" aria-pressed="true">Day trips from Bovec</button>
+    <button type="button" id="t-pass" aria-pressed="true">Passes</button>
+    <button type="button" id="t-peak" aria-pressed="true">Peaks</button>
+    <button type="button" id="t-walk" aria-pressed="true">Walk starts</button>
+  </div>
+  <div class="mapscroll"><svg id="map" viewBox="0 0 820 560" role="img" aria-label="Schematic map of the Julian Alps showing bases, passes, peaks and walk starts"></svg></div>
+  <div class="legend">
+    <span><svg class="sw" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5" class="base"/></svg> Base (hotel area)</span>
+    <span><svg class="sw" viewBox="0 0 16 16"><path d="M2 8 H14" class="rA"/></svg> Main route</span>
+    <span><svg class="sw" viewBox="0 0 16 16"><path d="M1 8 H15" class="rB"/></svg> Day trip from Bovec</span>
+    <span><svg class="sw" viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" transform="rotate(45 8 8)" class="passm"/></svg> Mountain pass</span>
+    <span><svg class="sw" viewBox="0 0 16 16"><path d="M8 2 L15 14 H1 Z" class="peakm"/></svg> Peak</span>
+    <span><svg class="sw" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5" class="startm"/></svg> Walk start</span>
+    <span><svg class="sw" viewBox="0 0 16 16"><path d="M1 8 Q5 3 8 8 T15 8" class="river"/></svg> Soča River</span>
+  </div>
+</section>
+
+<section aria-labelledby="bases-h" class="base-sec">
+  <h2 id="bases-h">Where you stay, and more to do</h2>
+  <p style="color:var(--muted);margin-top:-6px">Hotel choices for each base, with extra walks if you want more than the day-by-day plan. Distances and times for the extras come from published trail guides and earlier itineraries and are approximate.</p>
+  <div id="bases" class="base-sec"></div>
+</section>
+
+<section class="card" aria-labelledby="mv-h">
+  <h2 id="mv-h" style="margin-bottom:6px">Guiding and transfers</h2>
+  <div class="moves" style="margin-top:8px">
+    <div class="mv"><b>Guided by Jana</b><span>Slemenova Špica, the Soča Trail gorges, Kozjak Waterfall, Drežnica and Kolovrat. Jana knows the Kranjska Gora and Soča Valley areas well.</span></div>
+    <div class="mv"><b>Bohinj</b><span>Local guides are arranged where needed, especially for the Seven Triglav Lakes.</span></div>
+    <div class="mv"><b>Transfers</b><span>Private transfers between hotels, luggage transport, transfers to trailheads, activities and tickets are all arranged for you.</span></div>
+  </div>
+</section>
+
+<section class="card" aria-labelledby="d-h">
+  <h2 id="d-h" style="margin-bottom:10px">Choices for you to make</h2>
+  <ul class="decide">
+    <li><b>June 20:</b> Vogel with a shorter walk, or the full-day Seven Triglav Lakes Valley with a local guide.</li>
+    <li><b>June 26:</b> Kolovrat Ridge and the WWI museum, or the Tolmin Gorges.</li>
+    <li><b>Extra nights.</b> Add a night in Bohinj, Kranjska Gora, Bovec, Kobarid or Ljubljana for more relaxation.</li>
+    <li><b>June 24 free day:</b> rafting, a short scenic walk, or a rest day.</li>
+    <li><b>One hotel per base.</b> Each base has hotel choices below. Tell us your preference and we confirm availability.</li>
+    <li><b>Departure airport.</b> Ljubljana (2 to 2.5 hours) or Venice Marco Polo (about 2 hours 15 to 45 minutes).</li>
+  </ul>
+  <p class="note" style="margin-top:14px">Hotels are suggestions. Pick the ones you like and we confirm availability.</p>
+</section>
+
+<footer class="card">
+  <div class="contact">
+    <b>Kathy Dragon</b>
+    <span>Whole Journeys</span>
+    <span>kathy.dragon@wholejourneys.com</span>
+  </div>
+  <p class="src" style="margin-top:14px">Route details come from these sources: <a href="https://trekhunt.com/en/article/mostnica-gorge/" target="_blank" rel="noopener">Mostnica Gorge</a>, <a href="https://www.moonhoneytravel.com/triglav-lakes-valley-hike-slovenia/" target="_blank" rel="noopener">Seven Triglav Lakes</a>, <a href="https://www.earthtrekkers.com/hiking-julian-alps-slovenia-vrsic-pass-sleme-and-slemenova-spica/" target="_blank" rel="noopener">Slemenova Špica</a>, <a href="https://trekhunt.com/en/article/planica-tamar-valley/" target="_blank" rel="noopener">Planica and Tamar</a>, <a href="https://www.soca-trenta.si/en/Trenta-Valley/activities/the-soca-trail" target="_blank" rel="noopener">Soča Trail</a>, <a href="https://trekhunt.com/en/article/kozjak-waterfall/" target="_blank" rel="noopener">Kozjak Waterfall</a>, <a href="https://www.soca-valley.com/en/in-search-of-adventure/culture/outdoor-museums/2021011121433003/kolovrat-outdoor-museum/" target="_blank" rel="noopener">Kolovrat Outdoor Museum</a>, <a href="https://api.theoutbound.com/slovenia/hiking/hike-the-vintgar-gorge" target="_blank" rel="noopener">Vintgar Gorge</a> and <a href="https://www.slovenia.info/en/business/trade-news/37213-open-kitchen-2026-allready-started-at-pogacar-square-in-ljubljana" target="_blank" rel="noopener">Odprta kuhna</a>.</p>
+</footer>
+</div>
+
+<script>
+(function () {
+  function mapLink(q) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q); }
+
+  /* ---------- Bases, walks, hotels ---------- */
+  var bases = [
+    { id: 'ljubljana', name: 'Ljubljana', badges: [['June 16 to 18: 2 nights']],
+      blurb: 'Slovenia\'s small, car-free capital along the Ljubljanica River, with a castle on the hill. An easy start with a full free day.',
+      doorLabel: 'In and around town', door: [
+        { n: 'Old Town and Castle Hill', where: 'On foot from the hotels below.', stat: '<b>Easy.</b> Funicular or footpath up to the castle; the Central Market, Triple Bridge and riverside cafés on the way down.', style: 'self' },
+        { n: 'Communist History Tour', where: 'Starts in the centre.', stat: 'A guided walking tour of the Yugoslav period, recommended by our local guide.', style: 'guide' },
+        { n: 'Odprta kuhna (Open Kitchen)', where: 'Pogačar Square, Fridays.', stat: 'Open-air street food market on sunny Fridays. June 18 is a Friday, so it fits before you leave for Bled.', style: 'self' }
+      ], transfer: [],
+      hotels: [
+        { name: 'Hotel Cubo', town: 'Ljubljana', note: 'Slovenska cesta 15. Contemporary design, a few steps from the old town.', site: 'http://www.hotelcubo.com' },
+        { name: 'Lesar Hotel Angel', town: 'Ljubljana', note: 'Gornji trg 7. In the old town, below the castle.', site: 'http://www.angelhotel.si/' },
+        { name: 'Design Hotel Vander', town: 'Ljubljana', note: 'Boutique hotel in the old town overlooking the river.', site: 'http://vanderhotel.com/' },
+        { name: 'B&B Slamič', town: 'Ljubljana', note: 'Kersnikova ulica 1. Small guesthouse-style stay near the centre.', site: 'http://www.slamic.si' }
+      ] },
+    { id: 'bohinj', name: 'Lake Bohinj', badges: [['June 18 to 21: 3 nights']],
+      blurb: 'A quieter alpine lake inside Triglav National Park, with Ribčev Laz, Stara Fužina and Ukanc along the shore. On June 18 you stop at Lake Bled on the way: the lake loop, the Ojstrica viewpoint, and the Bled cream cake at Café Belvedere, part of Vila Bled.',
+      doorLabel: 'More walks from your door', door: [
+        { n: 'Lakeshore path', where: 'Between Ribčev Laz, Ukanc and Stara Fužina.', stat: '<b>Level, any length.</b> Lunch of local stews and blueberry struklji at a lakeside inn.', style: 'self' }
+      ],
+      transferLabel: 'More walks with a transfer', transfer: [
+        { n: 'Savica Waterfall', where: 'West end of the lake, near Ukanc.', stat: '<b>Short walk with steps.</b> Pair with the lake shore for a gentle day.', style: 'self' },
+        { n: 'Pokljuka plateau and Debela peč', where: 'Drive to the Pokljuka plateau, Lipanca hut after 1.5 hours.', stat: '<b>5 to 6 hours · 9.8 mi · up 2,360 ft</b> to 6,607 ft. Stop at the hut for tea instead of climbing the peak.', style: 'guide' }
+      ],
+      hotels: [
+        { name: 'Boutique Hotel Majerca', town: 'Stara Fužina', note: '4-star boutique with a well-regarded restaurant, about 10 minutes from the shore and nearest Mostnica Gorge.', site: 'https://www.majerca.si/' },
+        { name: 'Hotel Bohinj', town: 'Ribčev Laz', note: 'Ribčev Laz 45. 62 rooms on the lake with a spa.', site: 'http://www.hotelbohinj.si/en' },
+        { name: 'Art Hotel Kristal', town: 'Ribčev Laz', note: 'Ribčev Laz 4a. Within walking distance of the lake, in the main village.', site: 'http://www.hotel-kristal-slovenia.com' },
+        { name: 'Apartmaji Alp', town: 'Ribčev Laz', note: 'Ribčev Laz 46, across the road from Hotel Bohinj and about 200 m from the lake. Apartments.', site: 'https://tdbohinj.si/td-accomodation/apartmaji-alp/' },
+        { name: 'Hotel Jezero', town: 'Ribčev Laz', note: 'Ribčev Laz 51. Lakeside village hotel.', site: 'http://www.hotel-jezero.si' },
+        { name: 'Bohinj ECO Hotel', town: 'Bohinjska Bistrica', note: 'Triglavska cesta 17. A sustainability-focused hotel with pools and wellness, in the valley town a short drive from the lake.', site: 'https://www.bohinj-eco-hotel.si/' }
+      ] },
+    { id: 'kranjska', name: 'Kranjska Gora', badges: [['June 21 to 23: 2 nights']],
+      blurb: 'A mountain village at the foot of Vršič Pass, 4 miles from Italy and 7 from Austria. The last stop before the "Russian Road" over the pass to the Soča Valley.',
+      doorLabel: 'More walks from your door', door: [
+        { n: 'Planica and the Tamar Valley', where: 'Starts at the Planica ski jump, a short drive or bus from the village.', stat: '<b>About 1.5 hours each way, nearly level.</b> No cars in the valley.', style: 'self' }
+      ], transfer: [],
+      hotels: [
+        { name: 'Vitranc Boutique Hotel', town: 'Podkoren', note: 'Four-star boutique hotel in the village of Podkoren, close to Kranjska Gora.', site: 'https://www.vitranc.si/' },
+        { name: 'Hotel Kotnik', town: 'Kranjska Gora', note: 'In the centre of the village; the most on foot.', site: 'https://www.hotel-kotnik.si/' },
+        { name: 'Pr\' Gavedarjo', town: 'Kranjska Gora', note: 'Small family-run guesthouse in Kranjska Gora.', site: 'http://prgavedarjo.si/sl/' }
+      ] },
+    { id: 'bovec', name: 'Bovec and the Soča Valley', badges: [['June 23 to 27: 4 nights']],
+      blurb: 'The emerald Soča River, gorges and footbridges with mountains on every side. Bovec is the activity hub, and Kobarid, Drežnica, Kolovrat and Tolmin are day trips from here.',
+      doorLabel: 'More walks from your door', door: [
+        { n: 'Soča riverside and Sunik water grove', where: 'From Bovec along the Alpe-Adria Trail.', stat: '<b>Half-day version, mostly level.</b> The full stage is about 13 mi and 7 hours, so we cut it short.', style: 'self' }
+      ],
+      transferLabel: 'More walks with a transfer', transfer: [
+        { n: 'Soča Trail: Lepena to Kršovec', where: 'Near Bovec.', stat: '<b>About 1.5 hours.</b> Gentle, for a shorter day.', style: 'either' },
+        { n: 'Full Trenta to Bovec stage', where: 'The whole river section.', stat: '<b>About 21 km, 4 to 5 hours.</b> Offered as the longer option on June 23, or shorten it to the gorge sections.', style: 'guide' }
+      ],
+      hotels: [
+        { name: 'Boutique Hotel Sanje ob Soči', town: 'Bovec', note: 'Family-run 4-star boutique hotel on the river, with a restaurant and a spa.', site: 'https://sanjeobsoci.com/' },
+        { name: 'Boutique Hotel Dobra Vila', town: 'Bovec', note: 'Mala vas 112. 11 rooms, restaurant, wine cellar and garden.', site: 'https://dobra-vila-bovec.si/' },
+        { name: 'Hotel Alp', town: 'Bovec', note: 'Trg golobarskih žrtev 48. A hotel in the centre of Bovec.', site: 'http://www.hotel-alp-bovec.com' },
+        { name: 'Hotel Mangart', town: 'Bovec', note: 'Mala vas 107. Hotel in Bovec.', site: 'https://www.hotel-mangart.com/' }
+      ] }
+  ];
+
+  /* ---------- Day by day ---------- */
+  var days = [
+    { d: 'Jun 16', w: 'Wed', t: 'Arrival in Ljubljana', sleep: 'Ljubljana',
+      plan: 'Private transfer from Ljubljana Airport to your hotel. Free afternoon or evening to explore the Old Town and have dinner.',
+      meta: [['Transfer', 'Airport to city centre, about 25 to 35 minutes.'], ['Guiding', 'Private driver.']] },
+    { d: 'Jun 17', w: 'Thu', t: 'Ljubljana', sleep: 'Ljubljana',
+      plan: 'A full day to explore on your own: Ljubljana Castle, the Central Market, Triple Bridge and the riverside cafés. An optional Communist History Tour is a good addition if you enjoy history; our guide joined it herself and loved it.',
+      meta: [['Walking', 'Flexible, depending on your interests.'], ['Transfers', 'None needed if you stay centrally.'], ['Guiding', 'Self-guided, with an optional organised historical tour.']] },
+    { d: 'Jun 18', w: 'Fri', t: 'Ljubljana, Lake Bled and Bohinj', sleep: 'Bohinj',
+      plan: 'If the timing works, visit Open Kitchen, the Friday food market, before you leave. Then a private transfer to Lake Bled: time at the lake, lunch, the Bled cream cake at Café Belvedere (Vila Bled), and a short walk to a viewpoint if you like. Continue to Bohinj and check in.',
+      meta: [['Activities', 'About 2 to 3 hours around Lake Bled.'], ['Transfers', 'Ljubljana to Bled about 45 to 60 minutes. Bled to Bohinj about 30 to 40 minutes.'], ['Guiding', 'Self-guided sightseeing, with a private driver and luggage transfer.']] },
+    { d: 'Jun 19', w: 'Sat', t: 'Mostnica Gorge and Voje Valley', sleep: 'Bohinj',
+      plan: 'A beautiful walk through Mostnica Gorge toward the Voje Valley. The route can be shortened or extended to suit you. Free afternoon to relax by Lake Bohinj.',
+      meta: [['Hiking', 'About 3 to 5 hours, depending on the route.'], ['Transfer', 'About 5 to 15 minutes to Stara Fužina, or on foot depending on your hotel.'], ['Guiding', 'Self-guided with clear route information, or with a local guide.']] },
+    { d: 'Jun 20', w: 'Sun', t: 'Vogel or the Seven Triglav Lakes', sleep: 'Bohinj',
+      plan: 'Two options for the day. Choose the one that suits your energy.',
+      opts: [
+        { n: 'Option A: Vogel', t: 'Cable car up to Vogel for panoramic views and a shorter hike in the surrounding mountains.', meta: [['Walking', 'About 2 to 4 hours, depending on the trail.'], ['Guiding', 'Self-guided on a well-marked route, subject to conditions.']] },
+        { n: 'Option B: Seven Triglav Lakes Valley', b: true, t: 'A full-day mountain hike for a bigger adventure. From earlier itineraries we estimate about 2,700 ft of climbing, which is within your limit but a long day. Snow can linger in June, so we confirm conditions in spring.', meta: [['Walking', 'About 6 to 8 hours or longer, depending on the route and start.'], ['Guiding', 'Local mountain guide recommended.']] }
+      ] },
+    { d: 'Jun 21', w: 'Mon', t: 'Transfer to Kranjska Gora', sleep: 'Kranjska Gora',
+      plan: 'A relaxed morning in Bohinj, then a private transfer to Kranjska Gora. In the afternoon, explore Lake Jasna, Zelenci Nature Reserve or the village itself.',
+      meta: [['Walking', 'About 1 to 2 hours, optional.'], ['Transfer', 'Bohinj to Kranjska Gora, about 1 hour 15 minutes to 1 hour 40 minutes.'], ['Guiding', 'Self-guided afternoon, with a private transfer and luggage transport.']] },
+    { d: 'Jun 22', w: 'Tue', t: 'Slemenova Špica', sleep: 'Kranjska Gora',
+      plan: 'A guided hike from Vršič Pass to Slemenova Špica, with spectacular views of Mount Jalovec and the Julian Alps. A wonderful alternative to the longer, more demanding walk from Kranjska Gora toward Trenta.',
+      meta: [['Hiking', 'About 3 to 4 hours, around 5 to 6 km, with about 300 to 400 m (1,000 to 1,300 ft) of climbing.'], ['Transfer', 'Kranjska Gora to Vršič Pass, about 25 to 35 minutes each way.'], ['Guiding', 'Personally guided by Jana.']] },
+    { d: 'Jun 23', w: 'Wed', t: 'Vršič Pass, Soča Trail and Bovec', sleep: 'Bovec',
+      plan: 'A private transfer over Vršič Pass with scenic stops, then a walk along the Soča Trail on the way to Bovec. Two options, depending on how much walking you want. Either way, your luggage goes ahead to Bovec.',
+      opts: [
+        { n: 'Option A: Soča gorges (shorter)', t: 'A shorter hike along one of the most beautiful sections of the Soča Trail, the Small and Great Soča Gorges (Mala korita and Velika korita). Continue to Bovec and check in. Allow about 5 to 6 hours for the full day.', meta: [['Hiking', 'About 2 to 4 hours, depending on the sections chosen.'], ['Transfer', 'Kranjska Gora to Bovec via Vršič, about 1 hour 15 minutes to 1 hour 40 minutes of driving, not counting stops.'], ['Guiding', 'Personally guided by Jana, with private transport and luggage transfer.']] },
+        { n: 'Option B: Walk from Trenta (longer)', b: true, t: 'Start in Trenta, the valley on the south side of Vršič, and follow the Soča Trail down the river toward Bovec. The full Trenta to Bovec stage is about 21 km and 4 to 5 hours of walking. We can shorten it on the day by joining or leaving the trail at a road crossing, and the guide will advise on the best sections, including the gorges.', meta: [['Hiking', 'Up to about 21 km and 4 to 5 hours for the full stage, or a shorter section of your choice.'], ['Transfer', 'Kranjska Gora to Trenta over Vršič, then a private pick-up on the trail for Bovec. Driving times to be confirmed with Jana.'], ['Guiding', 'Guided by Jana, with private transport and luggage transfer.']] }
+      ] },
+    { d: 'Jun 24', w: 'Thu', t: 'Free day in Bovec', sleep: 'Bovec',
+      plan: 'A flexible day at your own pace: rafting on the Soča River, a short scenic walk, exploring Bovec, or simply relaxing at the hotel.',
+      meta: [['Rafting', 'About 2 to 3 hours overall, depending on the operator.'], ['Transfers', 'Usually arranged by the activity provider; other local transfers as needed.']] },
+    { d: 'Jun 25', w: 'Fri', t: 'Kozjak Waterfall and Drežnica', sleep: 'Bovec',
+      plan: 'A private transfer to Kobarid, then a scenic walk to Kozjak Waterfall. Continue to Drežnica, a mountain village beneath Mount Krn, with optional extra walking around Drežnica or Koseč. For a traditional local meal, Tourist Farm Kranjc in Koseč, subject to availability and arrangement.',
+      meta: [['Hiking', 'About 2 to 4 hours in total, depending on the extra walking.'], ['Transfers', 'Bovec to Kobarid 20 to 25 minutes. Kobarid to Drežnica 15 to 20 minutes. Drežnica to Bovec 35 to 45 minutes.'], ['Guiding', 'Personally guided by Jana.']] },
+    { d: 'Jun 26', w: 'Sat', t: 'Kolovrat Ridge or the Tolmin Gorges', sleep: 'Bovec',
+      plan: 'Two options for the day. Jana\'s first recommendation is Kolovrat.',
+      opts: [
+        { n: 'Option A: Kolovrat Ridge', t: 'The WWI Open-Air Museum, with preserved trenches and military positions, and panoramic views over the Soča Valley, the Julian Alps and Italy. A longer scenic ridge walk is possible. The museum site closes in bad weather.', meta: [['Walking', 'About 2 to 4 hours.'], ['Transfer', 'Bovec to Kolovrat, about 50 to 65 minutes each way.'], ['Guiding', 'Personally guided by Jana.']] },
+        { n: 'Option B: Tolmin Gorges', t: 'A shorter, nature-focused excursion that leaves more time to relax in the afternoon.', b: true, meta: [['Walking', 'About 1.5 to 2 hours.'], ['Transfer', 'Bovec to the Tolmin Gorges, about 40 to 50 minutes each way.'], ['Guiding', 'Self-guided with private transfers, or guided if you prefer.']] }
+      ] },
+    { d: 'Jun 27', w: 'Sun', t: 'Departure', sleep: '',
+      plan: 'A private transfer from Bovec to Ljubljana Airport or to Venice Marco Polo Airport.',
+      meta: [['Bovec to Ljubljana Airport', 'About 2 to 2.5 hours.'], ['Bovec to Venice Marco Polo', 'About 2 hours 15 minutes to 2 hours 45 minutes.']] }
+  ];
+  (function () {
+    var h = '';
+    days.forEach(function (x) {
+      function meta(m) { return '<div class="meta">' + m.map(function (r) { return '<span><b>' + r[0] + ':</b> ' + r[1] + '</span>'; }).join('') + '</div>'; }
+      h += '<div class="day"><div class="dt">' + x.d + '<small>' + x.w + '</small></div><div><h3>' + x.t + '</h3>' + (x.sleep ? '<div class="sleep">Sleep: ' + x.sleep + '</div>' : '') + '<p>' + x.plan + '</p>';
+      if (x.opts) x.opts.forEach(function (o) { h += '<div class="opt' + (o.b ? ' b' : '') + '"><h4>' + o.n + '</h4><p>' + o.t + '</p>' + meta(o.meta) + '</div>'; });
+      else h += meta(x.meta);
+      h += '</div></div>';
+    });
+    document.getElementById('days').innerHTML = h;
+  })();
+
+  function tag(s) { var t = { guide: 'Guided', self: 'Independent', either: 'Guided or independent' }[s]; return '<span class="tag ' + s + '">' + t + '</span>'; }
+  function walkHtml(w) {
+    return '<div class="walk"><h5>' + w.n + ' ' + tag(w.style) + '</h5><p>' + w.where + '</p><p class="stats">' + w.stat + '</p></div>';
+  }
+  function hotelHtml(h) {
+    var web = h.site ? '<a class="btn" href="' + h.site + '" target="_blank" rel="noopener">Website</a>' : '<span class="btn is-disabled" aria-disabled="true">Website on request</span>';
+    return '<div class="hotel"><span class="name">' + h.name + ', ' + h.town + '<small>' + h.note + '</small></span><span class="links">' + web +
+      '<a class="btn" href="' + mapLink(h.name + ', ' + h.town + ', Slovenia') + '" target="_blank" rel="noopener">Map</a></span></div>';
+  }
+  var out = '';
+  bases.forEach(function (b) {
+    var badges = b.badges.map(function (x) { return '<span class="badge' + (x[1] ? ' ' + x[1] : '') + '">' + x[0] + '</span>'; }).join('');
+    var cols = '<div class="col"><h4>' + (b.doorLabel || 'Walks from your door') + '</h4><p class="sub">' + (b.doorSub || 'Start on foot from the hotel area.') + '</p>' + b.door.map(walkHtml).join('') + '</div>';
+    if (b.transfer.length) cols += '<div class="col"><h4>' + (b.transferLabel || 'Walks with a transfer') + '</h4><p class="sub">A short drive or pick-up to the start. Your guide or driver collects you from the hotel.</p>' + b.transfer.map(walkHtml).join('') + '</div>';
+    out += '<article class="card" id="' + b.id + '"><div class="bhead"><h3>' + b.name + '</h3><div class="badges">' + badges + '</div></div>' +
+      '<p style="margin-top:8px">' + b.blurb + '</p>' + (b.flow ? '<div class="flow"><b>How the days could go</b>' + b.flow.map(function (f) { return '<p><span class="lab' + (f[0] === 'B' ? ' b' : '') + '">Option ' + f[0] + ':</span> ' + f[1] + '</p>'; }).join('') + '</div>' : '') + '<div class="cols">' + cols + '</div>' +
+      '<h4 style="margin:18px 0 4px">Hotel choices</h4>' + b.hotels.map(hotelHtml).join('') + '</article>';
+  });
+  document.getElementById('bases').innerHTML = out;
+
+  var extras = [
+    { t: 'An extra night in Bohinj', d: 'A second lake day: a boat on the lake, a swim, Savica Waterfall or a long lunch by the shore. You stay at the same hotel.' },
+    { t: 'An extra night in Kranjska Gora', d: 'A slower pass week: Planica and the Tamar Valley, Lake Jasna and Zelenci at your own pace before the guided Slemenova Špica day.' },
+    { t: 'An extra night in Bovec', d: 'A second free day on the Soča: rafting one day and an easy river walk or a rest the next.' },
+    { t: 'Nights in Kobarid or Drežnica', d: 'Stay closer to Kozjak Waterfall, Drežnica and Kolovrat for the last nights, with no drive back to Bovec, quiet evenings and the Kobarid museum on foot. Hotels:',
+      hotels: [
+        { name: 'Hotel Hvala', town: 'Kobarid', note: 'Trg svobode 1. Family-run, 32 rooms in the town centre.', site: 'https://www.hotelhvala.si/' },
+        { name: 'Tourist Farm Kranjc', town: 'Koseč', note: 'Koseč 7. Farm stay with 8 units and traditional dishes, in the hills above Drežnica.', site: 'http://www.turizem-kranjc.si/index.html' },
+        { name: 'Nebesa Chalets', town: 'Livek', note: 'Livek 39. Four chalets for two with big views, closest to Kolovrat.', site: 'https://www.nebesa.si/' }
+      ] },
+    { t: 'An extra night in Ljubljana', d: 'A free day at the end, with the Communist History Tour, the market or a long farewell dinner, before flying from Ljubljana Airport.' }
+  ];
+  document.getElementById('extras').innerHTML = extras.map(function (x) {
+    return '<div class="walk"><h5>' + x.t + '</h5><p>' + x.d + '</p>' + (x.hotels ? x.hotels.map(hotelHtml).join('') : '') + '</div>';
+  }).join('');
+
+  /* ---------- Map ---------- */
+  var X = function (lon) { return 40 + (lon - 13.35) * 640; };
+  var Y = function (lat) { return 30 + (46.55 - lat) * 920; };
+  function P(a) { return X(a[0]).toFixed(1) + ',' + Y(a[1]).toFixed(1); }
+  function poly(pts) { return pts.map(P).join(' '); }
+  var pt = {
+    lju: [14.51, 46.05], bled: [14.11, 46.37], bohinj: [13.89, 46.29], kg: [13.785, 46.485], vrsic: [13.742, 46.433],
+    trenta: [13.74, 46.38], bovec: [13.553, 46.337], kobarid: [13.578, 46.248], drez: [13.60, 46.27], tolmin: [13.733, 46.183],
+    kolov: [13.57, 46.19], planica: [13.725, 46.48], savica: [13.79, 46.295]
+  };
+  var s = '';
+  s += '<rect width="820" height="560" class="land"/>';
+  s += '<polygon class="other" points="' + poly([[13.35,46.55],[13.7,46.55],[13.72,46.50],[13.66,46.44],[13.58,46.42],[13.50,46.35],[13.51,46.32],[13.55,46.26],[13.54,46.20],[13.46,46.12],[13.35,46.05]]) + '"/>';
+  s += '<polygon class="other" points="' + poly([[13.7,46.55],[14.65,46.55],[14.65,46.48],[14.45,46.47],[14.2,46.50],[13.98,46.49],[13.72,46.50]]) + '"/>';
+  s += '<text class="lbl t" x="' + X(13.40) + '" y="' + Y(46.46) + '">Italy</text>';
+  s += '<text class="lbl t" x="' + X(14.25) + '" y="' + Y(46.525) + '">Austria</text>';
+  s += '<text class="lbl t" x="' + X(14.1) + '" y="' + Y(46.08) + '">Slovenia</text>';
+  s += '<ellipse class="lake" cx="' + X(13.86) + '" cy="' + Y(46.285) + '" rx="22" ry="8"/>';
+  s += '<ellipse class="lake" cx="' + X(14.095) + '" cy="' + Y(46.364) + '" rx="12" ry="8"/>';
+  s += '<polyline class="river" points="' + poly([[13.72,46.41],[13.74,46.38],[13.65,46.35],[13.553,46.337],[13.57,46.30],[13.585,46.25],[13.65,46.22],[13.733,46.183],[13.75,46.11]]) + '"/>';
+  s += '<text class="lbl t" x="' + (X(13.655) + 6) + '" y="' + (Y(46.215) + 4) + '">Soča River</text>';
+
+  // routes
+  var rA = [pt.lju, pt.bled, pt.bohinj, pt.kg, pt.vrsic, pt.trenta, pt.bovec];
+  var dt = [[pt.bovec, pt.kobarid, pt.drez], [pt.kobarid, [13.57, 46.19]], [pt.bovec, pt.tolmin]];
+  s += '<g id="g-b">' + dt.map(function (r) { return '<polyline class="rB" points="' + poly(r) + '"/>'; }).join('') + '</g>';
+  s += '<g id="g-a"><polyline class="rA" points="' + poly(rA) + '"/></g>';
+
+  // peaks
+  var peaks = [
+    ['Triglav 2,864 m', [13.837, 46.378], 10, -8, 'start'],
+    ['Jalovec 2,645 m', [13.633, 46.418], 12, 4, 'start'],
+    ['Mangart 2,679 m', [13.656, 46.44], -10, -10, 'end'],
+    ['Krn 2,244 m', [13.664, 46.238], 12, 4, 'start'],
+    ['Kanin 2,587 m', [13.47, 46.30], 0, -14, 'middle']
+  ];
+  s += '<g id="g-peak">';
+  peaks.forEach(function (k) {
+    var x = X(k[1][0]), y = Y(k[1][1]);
+    s += '<path class="peakm" d="M' + x + ' ' + (y - 9) + ' L' + (x + 9) + ' ' + (y + 6) + ' L' + (x - 9) + ' ' + (y + 6) + ' Z"/>';
+    s += '<text class="lbl s" x="' + (x + k[2]) + '" y="' + (y + k[3]) + '" text-anchor="' + k[4] + '">' + k[0] + '</text>';
+  });
+  s += '</g>';
+
+  // passes
+  var passes = [
+    ['Vršič Pass 1,611 m', pt.vrsic, 14, 4, 'start'],
+    ['Predel Pass 1,156 m', [13.579, 46.419], -12, 18, 'end']
+  ];
+  s += '<g id="g-pass">';
+  passes.forEach(function (k) {
+    var x = X(k[1][0]), y = Y(k[1][1]);
+    s += '<rect class="passm" x="' + (x - 6) + '" y="' + (y - 6) + '" width="12" height="12" transform="rotate(45 ' + x + ' ' + y + ')"/>';
+    s += '<text class="lbl s" x="' + (x + k[2]) + '" y="' + (y + k[3]) + '" text-anchor="' + k[4] + '">' + k[0] + '</text>';
+  });
+  s += '</g>';
+
+  // walk starts
+  var starts = [
+    ['Seven Lakes start', [13.80, 46.33], -12, 4, 'end'],
+    ['Mostnica Gorge', [13.91, 46.30], 12, -8, 'start'],
+    ['Planica / Tamar', pt.planica, -12, 4, 'end'],
+    ['Marka Bridge', [13.69, 46.395], 12, 20, 'start'],
+    ['Kozjak', [13.61, 46.255], -12, -8, 'end'],
+    ['Kolovrat Ridge', [13.55, 46.195], -12, 4, 'end']
+  ];
+  s += '<g id="g-walk">';
+  starts.forEach(function (k) {
+    var x = X(k[1][0]), y = Y(k[1][1]);
+    s += '<circle class="startm" cx="' + x + '" cy="' + y + '" r="7"/>';
+    s += '<text class="lbl s" x="' + (x + k[2]) + '" y="' + (y + k[3]) + '" text-anchor="' + k[4] + '">' + k[0] + '</text>';
+  });
+  s += '</g>';
+
+  // bases
+  var bl = [
+    ['Ljubljana', pt.lju, -14, 5, 'end'],
+    ['Lake Bled', pt.bled, 12, -8, 'start'],
+    ['Lake Bohinj', pt.bohinj, 12, 20, 'start'],
+    ['Kranjska Gora', pt.kg, 12, -10, 'start'],
+    ['Bovec', pt.bovec, -12, 4, 'end'],
+    ['Kobarid', pt.kobarid, -10, 20, 'end'],
+    ['Drežnica', pt.drez, 12, 3, 'start'],
+    ['Tolmin', pt.tolmin, 12, 14, 'start']
+  ];
+  bl.forEach(function (k) {
+    var x = X(k[1][0]), y = Y(k[1][1]);
+    var small = k[0] === 'Drežnica' || k[0] === 'Tolmin' || k[0] === 'Lake Bled' || k[0] === 'Kobarid';
+    s += '<circle class="base" cx="' + x + '" cy="' + y + '" r="' + (small ? 4.5 : 7) + '"' + (small ? ' style="stroke-width:2"' : '') + '/>';
+    s += '<text class="' + (small ? 'lbl s' : 'lbl') + '" x="' + (x + k[2]) + '" y="' + (y + k[3]) + '" text-anchor="' + k[4] + '">' + k[0] + '</text>';
+  });
+  s += '<text class="lbl t" x="40" y="548">Dashed lines are day trips from Bovec. Kobarid, Drežnica and Tolmin are not overnight stops.</text>';
+  document.getElementById('map').innerHTML = s;
+
+  function bind(btn, gid) {
+    document.getElementById(btn).addEventListener('click', function () {
+      var on = this.getAttribute('aria-pressed') !== 'true';
+      this.setAttribute('aria-pressed', on ? 'true' : 'false');
+      var g = document.getElementById(gid); if (g) g.style.display = on ? '' : 'none';
+    });
+  }
+  bind('t-a', 'g-a'); bind('t-b', 'g-b'); bind('t-pass', 'g-pass'); bind('t-peak', 'g-peak'); bind('t-walk', 'g-walk');
+})();
+</script>
+</body>
+</html>
